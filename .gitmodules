@@ -1,0 +1,3 @@
+[submodule "mtrn4010-ass1"]
+	path = mtrn4010-ass1
+	url = git@gitlab.com:dennuguyen/mtrn4010-ass1.git
