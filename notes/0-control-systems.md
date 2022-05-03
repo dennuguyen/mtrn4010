@@ -97,7 +97,7 @@ $$
 
 ## Coordinate Frames
 
-![](coordinate-frames.drawio.svg)
+![coordinate-frames](coordinate-frames.drawio.svg)
 
 $$
 \begin{aligned}

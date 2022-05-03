@@ -2,7 +2,7 @@
 
 ## 2D LiDAR
 
-![](2d-lidar.drawio.svg)
+![2d-lidar](2d-lidar.drawio.svg)
 
 $$T = cD$$
 
