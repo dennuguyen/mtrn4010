@@ -10,8 +10,8 @@ $$
 \frac{d\vec{x}(t)}{dt} = \frac{d}{dt}\left(\begin{matrix} x(t) \\ y(t) \\ \phi(t) \end{matrix} \right)=
     \left(
         \begin{matrix}
-            v(t) \cdot cos\left(\phi(t)\right) \\
-            v(t) \cdot sin\left(\phi(t)\right) \\
+            v(t) \cdot \cos\left(\phi(t)\right) \\
+            v(t) \cdot \sin\left(\phi(t)\right) \\
             \omega(t) \\
         \end{matrix}
     \right)
@@ -27,8 +27,8 @@ $$
 \frac{d\vec{x}(t + \tau)}{dt} = \frac{d}{dt}\left(\begin{matrix} x(t + \tau) \\ y(t + \tau) \\ \phi(t + \tau) \end{matrix} \right) =
     \left(
         \begin{matrix}
-            x(t) + v(t) \cdot cos\left(\phi(t)\right) \\
-            y(t) + v(t) \cdot sin\left(\phi(t)\right) \\
+            x(t) + v(t) \cdot \cos\left(\phi(t)\right) \\
+            y(t) + v(t) \cdot \sin\left(\phi(t)\right) \\
             \phi(t) + \omega(t) \\
         \end{matrix}
     \right)
@@ -50,7 +50,7 @@ $$
 
 The angular velocity is:
 $$
-\omega(t) = \frac{v(t)}{L} \cdot tan\left(\beta(t)\right)
+\omega(t) = \frac{v(t)}{L} \cdot \tan\left(\beta(t)\right)
 $$
 
 - $\beta$ is the steering angle.
@@ -60,9 +60,9 @@ $$
 \frac{d\vec{x}(t)}{dt} =
     \left(
         \begin{matrix}
-            v(t) \cdot cos\left(\phi(t)\right) \\
-            v(t) \cdot sin\left(\phi(t)\right) \\
-            \frac{v(t)}{L} \cdot tan\left(\beta(t)\right) \\
+            v(t) \cdot \cos\left(\phi(t)\right) \\
+            v(t) \cdot \sin\left(\phi(t)\right) \\
+            \frac{v(t)}{L} \cdot \tan\left(\beta(t)\right) \\
         \end{matrix}
     \right)
 $$
@@ -94,8 +94,8 @@ $$
 \frac{d\vec{x}(t)}{dt} =
     \left(
         \begin{matrix}
-            \frac{R_{wheel}}{2}\left(\omega_{L}(t) + \omega_{R}(t)\right) \cdot cos\left(\phi(t)\right) \\
-            \frac{R_{wheel}}{2}\left(\omega_{L}(t) + \omega_{R}(t)\right) \cdot sin\left(\phi(t)\right) \\
+            \frac{R_{wheel}}{2}\left(\omega_{L}(t) + \omega_{R}(t)\right) \cdot \cos\left(\phi(t)\right) \\
+            \frac{R_{wheel}}{2}\left(\omega_{L}(t) + \omega_{R}(t)\right) \cdot \sin\left(\phi(t)\right) \\
             \frac{R_{wheel}}{L}\left(\omega_{R}(t) - \omega_{L}(t) \right) \\
         \end{matrix}
     \right)
