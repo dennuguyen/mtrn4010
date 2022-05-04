@@ -19,7 +19,6 @@ $$
 ## Random Variable
 
 
-
 ## Probability Density Function
 
 $$
@@ -46,6 +45,25 @@ $$
 \begin{aligned}
     \sigma^2 = E\left((X - \mu)^{2} \right) = E(X)^{2} - \mu^{2}
 \end{aligned}
+$$
+
+## Normal Distribution
+
+<iframe src="https://www.desmos.com/calculator/cthhxvy5ac?embed" width="100%" height="300"></iframe>
+
+Let $X$ be a random variable with a normal distribution:
+$$
+X \thicksim \mathcal{N}(\mu, \sigma^{2})
+$$
+
+The expectation is:
+$$
+E(X) = \mu
+$$
+
+The variance is:
+$$
+Var(X) = \sigma^{2}
 $$
 
 ## Covariance
@@ -85,23 +103,29 @@ $$
 
 The cross-covariance matrix is the covariance between two random vectors i.e. the $(i, j)$ element of the cross-covariance matrix is the covariance of the $i^{th}$ element of a random vector and $j^{th}$ element of another random vector.
 
-## Normal Distribution
+## Random Vector
 
-<iframe src="https://www.desmos.com/calculator/cthhxvy5ac?embed" width="100%" height="300"></iframe>
-
-Let $X$ be a random variable with a normal distribution:
+A list of random variables:
 $$
-X \thicksim \mathcal{N}(\mu, \sigma^{2})
+\vec{X} = \left(\begin{matrix} X_{1} \\ \vdots \\ X_{n} \end{matrix}\right)
 $$
 
-The expectation is:
+## Multivariate Probability Density Function
+
+A random vector, $X$ of $k^{th}$ dimension, has a probability density function:
 $$
-E(X) = \mu
+\vec{X} \thicksim \mathcal{N}_{k}(\vec{\mu}, \vec{\Sigma})
 $$
 
-The variance is:
+Where:
+- $\vec{\mu}$ is the mean vector:
 $$
-Var(X) = \sigma^{2}
+    \vec{\mu} = E(\vec{X}) = \left(\begin{matrix} E(X_{1}) \\ \vdots \\ E(X_{k}) \end{matrix}\right)
+$$
+
+- $\vec{\Sigma}$ is the covariance matrix:
+$$
+    \vec{\Sigma}_{i, j} = Cov(X_{i}, X_{j})
 $$
 
 ## White Noise
