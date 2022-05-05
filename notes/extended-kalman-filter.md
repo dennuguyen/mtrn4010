@@ -1,80 +1,116 @@
 # Extended Kalman Filter
 
-The EKF is an algorithm used to filter noise to get accurate state values. It consists of two steps:
+The EKF is an algorithm used to filter noise to get accurate state values. It consists of two main steps:
 1. Prediction: Predicts what the system's state would be in the next time step.
 1. Update: Tunes the prediction closer to its true values based on the error of an observation paired with its truth value.
 
-## Definitions
-
-### State Vector
+## Design the State Vector
 
 The state vector is used to keep track of the states of the system that we are interested in evaluating:
 $$
 x = \left(\begin{matrix}x_{1} \\ \vdots \\ x_{n} \end{matrix}\right) \text{ : state vector}
 $$
 
-The covariance matrix of the state vector:
+But since this is not a perfect world, our state vector will have errors/noise that we need to model using covariance matrices:
 $$
 X = \left(
         \begin{matrix}
-            sd_{x_{1, 1}}^{2} & \dots & sd_{x_{1, n}}^{2} \\
+            \sigma_{x_{1}}\sigma_{x_{1}} & \dots & \sigma_{x_{1}}\sigma_{x_{n}} \\
             \vdots & \ddots & \vdots \\
-            sd_{x_{n, 1}}^{2} & \dots & sd_{x_{n, n}}^{2} \\
+            \sigma_{x_{n}}\sigma_{x_{1}} & \dots & \sigma_{x_{n}}\sigma_{x_{n}} \\
         \end{matrix}
     \right) \text{ : covariance matrix of state vector}
 $$
 
-- $sd_{x_{i, j}}$ is the standard deviation of the $i^{th}$ and $j^{th}$ elements of the state vector.
-
-> Note that $sd_{x_{i, i}}$ is just the standard deviation of the $i^{th}$ element.
-
-### Input Vector
+## Consider the Input Vector
 
 The input vector is a set of input variables which drives the system:
 $$
 u = \left(\begin{matrix} u_{1} \\ \vdots \\ u_{l} \end{matrix}\right) \text{ : input vector}
 $$
 
-The covariance matrix of the input vector:
-$$
-U = \left(
-        \begin{matrix}
-            sd_{u_{1, 1}}^{2} & \dots & sd_{u_{1, l}}^{2} \\
-            \vdots & \ddots & \vdots \\
-            sd_{u_{l, 1}}^{2} & \dots & sd_{u_{l, l}}^{2} \\
-        \end{matrix}
-    \right) \text{ : covariance matrix of input vector}
-$$
-
-### Process Model
+## Design the Process Model
 
 The process model, $f$, shows how the state vector is transformed between consecutive time steps:
 $$
-x(k + 1) = f(x(k), u(k)) + w(k + 1) \text{ : process model}
+x(k + 1) = f(x(k), u(k)) + w_{x}(k + 1) \text{ : process model}
 $$
 
 - $f$ is the ($n \times 1$) state-space representation of the system.
-- $w(k)$ is the next process model noise.
+- $w_{x}(k + 1)$ is the process model noise at the next time step.
 
-The covariance matrix of the process model noise is:
+> For robotics applications, the process model is as simple as a robot's kinematic model.
+
+### Transforming State Covariance Matrix
+
+It's easy to transform the state vector but how do we transform the state covariance matrix? Consider the Jacobian matrix of the process model with respect to the state variables:
 $$
-W = \left(
+F_{x}(k + 1 | k) = \left. \frac{\partial f}{\partial x} \right|_{\hat{x}(k | k), u(k)} \text{ : Jacobian matrix of process model at state}
+$$
+
+> The notation $F(k + 1 | k)$ means the value of $F$ at time, $k + 1$, given conditions of $k$.
+
+The state covariance matrix can then be transformed:
+$$
+X(k + 1 | k) = F_{x}(k + 1 | k) \cdot X(k | k) \cdot F_{x}(k + 1 | k) \text{ : transforming state covariance matrix}
+$$
+
+### Process Model Noise
+
+The covariance matrix of the process model noise has the form:
+$$
+W_{x}(k + 1) = \left(
         \begin{matrix}
-            sd_{x}^{2} & \dots & sd_{}^{2} \\
+            \sigma_{x_{1}}\sigma_{x_{1}} & \dots & \sigma_{x_{1}}\sigma_{x_{n}} \\
             \vdots & \ddots & \vdots \\
-            sd_{}^{2} & \dots & sd_{}^{2} \\
+            \sigma_{x_{n}}\sigma_{x_{1}} & \dots & \sigma_{x_{n}}\sigma_{x_{n}} \\
         \end{matrix}
     \right) \text{ : covariance matrix of process model noise}
 $$
 
-The state is easily transformed using the process model but the covariances need to be transformed using the Jacobian matrix of the process model. The Jacobian matrix of the process model is:
+- $\sigma$ is the standard deviation.
+
+Process model noise can come from multiple sources:
+- Input noise aka measurement dynamics.
+- Mismodelled system.
+- Hidden state.
+- Discretisation of time.
+
+> It's better to think of the covariance matrix of the process model noise to be the sum of all covariances of sources of noise.
+
+The process model noise will affect the state vector and is additive with the state covariance matrix:
 $$
-F(k + 1 | k) = \left. \frac{\partial f}{\partial x} \right|_{\hat{x}(k | k), u(k)} \text{ : Jacobian matrix of process model}
+X(k + 1 | k) = F_{x}(k + 1 | k) \cdot X(k | k) \cdot F_{x}(k + 1 | k)^{T} + W_{x}(k + 1) \text{ : process model noise equation}
 $$
 
-> Note that the process model is differentiated at both of its function arguments.
+### Input Noise as a Process Model Noise
 
-### Observation Vector
+Consider if input noise was not negligible and had to be modelled as part of the process model noise.
+$$
+W_{x}(k + 1) = U(k + 1) \text{ : input noise covariance matrix}
+$$
+
+The covariance matrix of the input vector is:
+$$
+U = \left(
+        \begin{matrix}
+            \sigma_{u_{1}}\sigma_{u_{1}} & \dots & \sigma_{u_{1}}\sigma_{u_{l}} \\
+            \vdots & \ddots & \vdots \\
+            \sigma_{u_{l}}\sigma_{u_{1}} & \dots & \sigma_{u_{l}}\sigma_{u_{l}} \\
+        \end{matrix}
+    \right) \text{ : covariance matrix of input vector}
+$$
+
+However, $U$ is in the control-space and not the state-space. So, we need to transform, $U$, using the Jacobian matrix of the process model with respect to its inputs:
+$$
+\begin{aligned}
+    F_{u}(k + 1 | k) &= \left. \frac{\partial f}{\partial u} \right|_{\hat{x}(k | k), u(k)} &\text{ : Jacobian matrix of process model at input} \\
+
+    U_{ss}(k + 1 | k) &= F_{u}(k + 1 | k) \cdot U_{cs}(k) \cdot F_{u}^{T}(k + 1 | k) &\text{ : transforming input noise covariance matrix}
+\end{aligned}
+$$
+
+## Consider the Observation Vector
 
 The observation vector is used to keep track of predicted observations to compare with some truth observations:
 $$
@@ -88,34 +124,38 @@ $$
 z = \left(\begin{matrix} z_{1} \\ \vdots \\ z_{m} \end{matrix}\right) \text{ : truth observation vector}
 $$
 
-### Observation Model
+## Design the Observation Model
 
 The observation model, $h$, predicts the observation vector given a state vector.
 $$
-\hat{z}(k + 1) = h(X(k + 1 | k)) + v(k + 1) \text{ : observation model}
+\hat{z}(k + 1) = h(X(k + 1 | k)) + w_{z}(k + 1) \text{ : observation model}
 $$
 
-- $h$ is an $m \times 1$ vector.
-- $v(k + 1)$ is the next observation model noise.
+- $h$ is an $(m \times 1)$ vector.
+- $w_{z}(k + 1)$ is the next observation model noise.
 
-The covariance matrix of the observation model noise is:
-$$
-V =
-\left(
-    \begin{matrix}
-        sd_{\hat{z}_{1, 1}}^{2} & \dots & sd_{\hat{z}_{1, m}}^{2} \\
-        \vdots & \ddots & \vdots \\
-        sd_{\hat{z}_{m, 1}}^{2} & \dots & sd_{\hat{z}_{m, m}}^{2} \\
-    \end{matrix}
-\right) \text{ : covariance matrix of observation model noise}
-$$
-
-The Jacobian matrix of the observation model is:
+The Jacobian matrix of the observation model with respect to the state is:
 $$
 H(k + 1 | k) = \left. \frac{\partial h}{\partial x} \right|_{\hat{x}(k + 1 | k)} \text{ : Jacobian matrix of observation model}
 $$
 
-### Innovation
+### Observation Model Noise
+
+The observation model will have some noise and the sources of noise are the same as the process model.
+
+The covariance matrix of the observation model noise is:
+$$
+W_{z} =
+\left(
+    \begin{matrix}
+        \sigma_{\hat{z}_{1}}\sigma_{\hat{z}_{1}} & \dots & \sigma_{\hat{z}_{1}}\sigma_{\hat{z}_{m}} \\
+        \vdots & \ddots & \vdots \\
+        \sigma_{\hat{z}_{m}}\sigma_{\hat{z}_{1}} & \dots & \sigma_{\hat{z}_{m}}\sigma_{\hat{z}_{m}} \\
+    \end{matrix}
+\right) \text{ : covariance matrix of observation model noise}
+$$
+
+## Get the Innovation
 
 The innovation is the difference between the measured and truth observations:
 
@@ -125,21 +165,33 @@ $$
 
 The innovation covariance is:
 $$
-Y(k + 1) = H(k + 1)X(k + 1 | k)H(k + 1)^{T} + V(k + 1) \text{ : innovation covariance}
+Y(k + 1) = H(k + 1)X(k + 1 | k)H(k + 1)^{T} + W_{z}(k + 1) \text{ : innovation covariance}
 $$
 
 > Why do we need the innovation? Because it is used to tune the predicted state vector closer to its true value.
 
-### Kalman Gain
+## Kalman Filter
 
 The Kalman gain determines how much we need to correct our prediction of the states.
 $$
 K(k + 1) = X(k + 1 | k) \cdot H(k + 1)^{T} \cdot Y(k + 1)^{-1} \text{ : Kalman gain}
 $$
 
+With the Kalman gain, the updated state and covariance matrix of the state of the next step is:
+$$
+\begin{aligned}
+x(k + 1 | k + 1) = x(k + 1 | k) + K(k + 1) \cdot Y(k + 1) &\text{ : updated state vector} \\
+X(k + 1 | k + 1) = (I - K(k + 1) \cdot H(k + 1)) \cdot X(k + 1 | k) &\text{ : updated covariance matrix of state}
+\end{aligned}
+$$
+
+The updated state and covariance matrix of the state is fed-back into the EKF algorithm to make the next prediction.
+
+---
+
 ## Pseudocode
 
-Now with all the definitions, the EKF is simply:
+Summarising all the above, the EKF is:
 
 $$
 \begin{aligned}
@@ -152,7 +204,7 @@ $$
 
 x(k + 1 | k) &= f(x(k | k), u(k)) + w(k) &\text{ : predict next state}\\
 F(k + 1 | k) &= \left. \frac{\partial f}{\partial x} \right|_{\hat{x}(k | k), u(k)} &\text{ : calculate proces model Jacobian}\\
-X(k + 1 | k) &= F(k + 1 | k)\cdot X(k | k)\cdot F(k + 1 | k)^{T} + W(k) &\text{ : predict next state covariance}\\
+X(k + 1 | k) &= F_{x}(k + 1 | k)\cdot X(k | k)\cdot F_{x}(k + 1 | k)^{T} + F_{u}(k + 1 | k)\cdot U(k)\cdot F_{u}(k + 1 | k)^{T} &\text{ : predict next state covariance}\\
 \\
 
 \text{\bf{Update:}} \\
