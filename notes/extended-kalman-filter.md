@@ -1,6 +1,6 @@
 # Extended Kalman Filter
 
-The EKF is an algorithm used to filter noise to get accurate state values. It consists of two main steps:
+The EKF is an algorithm used to filter noise to get accurate state values (and also lets us control the system with some input values!). It consists of two main steps:
 1. Prediction: Predicts what the system's state would be in the next timestep.
 1. Update: Tunes the prediction closer to its true values based on the error of an observation paired with its truth value.
 
