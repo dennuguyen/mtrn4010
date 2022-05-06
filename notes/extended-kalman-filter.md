@@ -33,11 +33,11 @@ $$
 
 The process model, $f$, shows how the state vector is transformed between consecutive timesteps:
 $$
-x(k + 1) = f(x(k), u(k)) + w_{x}(k + 1) \text{ : process model}
+x(k + 1) = f(x(k), u(k)) + w_{x}(k) \text{ : process model}
 $$
 
 - $f$ is the ($n \times 1$) state-space representation of the system.
-- $w_{x}(k + 1)$ is the process model noise at the next timestep.
+- $w_{x}(k)$ is the process model noise at the next timestep.
 
 > For robotics applications, the process model is as simple as a robot's kinematic model.
 
@@ -59,7 +59,7 @@ $$
 
 The covariance matrix of the process model noise has the form:
 $$
-W_{x}(k + 1) = \left(
+W_{x}(k) = \left(
         \begin{matrix}
             \sigma_{x_{1}}\sigma_{x_{1}} & \dots & \sigma_{x_{1}}\sigma_{x_{n}} \\
             \vdots & \ddots & \vdots \\
@@ -80,14 +80,14 @@ Process model noise can come from multiple sources:
 
 The process model noise will affect the state vector and is additive with the state covariance matrix:
 $$
-X(k + 1 | k) = F_{x}(k + 1 | k) \cdot X(k | k) \cdot F_{x}(k + 1 | k)^{T} + W_{x}(k + 1) \text{ : process model noise equation}
+X(k + 1 | k) = F_{x}(k + 1 | k) \cdot X(k | k) \cdot F_{x}(k + 1 | k)^{T} + W_{x}(k) \text{ : process model noise equation}
 $$
 
 ### Input Noise as a Process Model Noise
 
 Consider if input noise was not negligible and had to be modelled as part of the process model noise.
 $$
-W_{x}(k + 1) = U(k + 1) \text{ : input noise covariance matrix}
+W_{x}(k) = U(k + 1) \text{ : input noise covariance matrix}
 $$
 
 The covariance matrix of the input vector is:
@@ -128,11 +128,11 @@ $$
 
 The observation model, $h$, predicts the observation vector given a state vector.
 $$
-\hat{z}(k + 1) = h(X(k + 1 | k)) + w_{z}(k + 1) \text{ : observation model}
+\hat{z}(k + 1) = h(X(k + 1 | k)) + w_{z}(k) \text{ : observation model}
 $$
 
 - $h$ is an $(m \times 1)$ vector.
-- $w_{z}(k + 1)$ is the observation model noise at the next timestep.
+- $w_{z}(k)$ is the observation model noise at the next timestep.
 
 The Jacobian matrix of the observation model with respect to the state is:
 $$
@@ -164,7 +164,7 @@ $$
 
 With the addition of the state covariance matrix in observation space, the covariance matrix of the predicted observation vector is:
 $$
-\hat{Z}(k + 1) = X_{\text{observation}}(k + 1) + W_{z}(k + 1) \text{ : predicted observation covariance matrix}
+\hat{Z}(k + 1) = X_{\text{observation}}(k + 1) + W_{z}(k) \text{ : predicted observation covariance matrix}
 $$
 
 ## Get the Innovation
@@ -214,16 +214,16 @@ $$
 
 \text{\bf{Prediction:}} \\
 
-x(k + 1 | k) &= f(x(k | k), u(k)) + w_{x}(k + 1) &\text{ : predict next state}\\
+x(k + 1 | k) &= f(x(k | k), u(k)) + w_{x}(k) &\text{ : predict next state}\\
 F(k + 1 | k) &= \left. \frac{\partial f}{\partial x} \right|_{\hat{x}(k | k), u(k)} &\text{ : calculate proces model Jacobian}\\
-X(k + 1 | k) &= F_{x}(k + 1 | k)\cdot X(k | k)\cdot F_{x}(k + 1 | k)^{T} + W_{x}(k + 1) &\text{ : predict next state covariance}\\
+X(k + 1 | k) &= F_{x}(k + 1 | k)\cdot X(k | k)\cdot F_{x}(k + 1 | k)^{T} + W_{x}(k) &\text{ : predict next state covariance}\\
 \\
 
 \text{\bf{Update:}} \\
-\hat{z}(k + 1) &= h(X(k + 1 | k)) + w_{z}(k + 1) &\text{ : measure observation} \\
+\hat{z}(k + 1) &= h(X(k + 1 | k)) + w_{z}(k) &\text{ : measure observation} \\
 \hat{y}(k + 1) &= z(k + 1) - \hat{z}(k + 1) &\text{ : calculate innovation} \\
 H(k + 1 | k) &= \left. \frac{\partial h}{\partial x} \right|_{\hat{x}(k + 1 | k)} &\text{ : calculate observation model Jacobian} \\
-Y(k + 1) &= H(k + 1)X(k + 1 | k)H(k + 1)^{T} + W_{z}(k + 1) &\text{ : calculate innovation covariance} \\
+Y(k + 1) &= H(k + 1)X(k + 1 | k)H(k + 1)^{T} + W_{z}(k) &\text{ : calculate innovation covariance} \\
 K(k + 1) &= X(k + 1 | k) \cdot H(k + 1)^{T} \cdot Y(k + 1)^{-1} &\text{ : calculate Kalman gain}\\
 x(k + 1 | k + 1) &= x(k + 1 | k) + K(k + 1) \cdot \hat{y}(k + 1) &\text{ : update state vector} \\
 X(k + 1 | k + 1) &= (I - K(k + 1) \cdot H(k + 1)) \cdot X(k + 1 | k) &\text{ : update state covariance matrix} \\
