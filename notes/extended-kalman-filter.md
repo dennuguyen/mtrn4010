@@ -192,7 +192,7 @@ $$
 With the Kalman gain, the updated state and covariance matrix of the state of the next step is:
 $$
 \begin{aligned}
-x(k + 1 | k + 1) = x(k + 1 | k) + K(k + 1) \cdot Y(k + 1) &\text{ : updated state vector} \\
+x(k + 1 | k + 1) = x(k + 1 | k) + K(k + 1) \cdot \hat{y}(k + 1) &\text{ : updated state vector} \\
 X(k + 1 | k + 1) = (I - K(k + 1) \cdot H(k + 1)) \cdot X(k + 1 | k) &\text{ : updated covariance matrix of state}
 \end{aligned}
 $$
