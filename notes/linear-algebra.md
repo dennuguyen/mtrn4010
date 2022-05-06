@@ -1,8 +1,10 @@
 # Linear Algebra
 
-## Coordinate Frames
+## Rigid Transformations
 
-![coordinate-frames](coordinate-frames.drawio.svg)
+<!-- ![coordinate-frames](coordinate-frames.drawio.svg) -->
+
+A rigid transformation of a vector, $\vec{p}$, linearly transforms $\vec{p}$ from the coordinate frame, $A$, to coordinate frame, $B$, by rotation, $R$, and translation, $T$:
 
 $$
 \begin{aligned}
@@ -10,22 +12,29 @@ $$
 \end{aligned}
 $$
 
-In 2D, where $\phi$ is the angle between the two coordinate frames:
+> $p$ is the same vector expressed in two different coordinate frames.
+
+### Translation
+
+$T$ is the translation matrix:
 $$
-\vec{R}_{\phi} = \left(\begin{matrix} cos(\phi) & -sin(\phi) \\ sin(\phi) & cos(\phi) \end{matrix}\right)
+\vec{T}_{A \rightarrow B} = \vec{p}_{B|A} = \vec{p}_{B} - \vec{p}_{A}
 $$
 
-$R$ is the rotation matrix:
+### Rotation
+
+Let $\phi$ be the angle between the two coordinate frames:
 $$
-\vec{R}_{A \rightarrow B} = (\vec{b}_{A, 1}\text{ , ... , } \vec{b}_{A, n})^{T}
+\phi_{B|A} = \phi_{B} - \phi_{A}
 $$
+
+In 2D:
+$$
+\vec{R}_{A \rightarrow B} = \vec{R}_{\phi_{B|A}} = \left(\begin{matrix} cos(\phi_{B|A}) & -sin(\phi_{B|A}) \\ sin(\phi_{B|A}) & cos(\phi_{B|A}) \end{matrix}\right)
+$$
+
 
 If the direction of the rotation matrix was inversed:
 $$
 \vec{R}_{A \rightarrow B} = \left(\vec{R}_{B \rightarrow A}\right)^{-1} = \left(\vec{R}_{B \rightarrow A}\right)^{T}
-$$
-
-$T$ is the translation matrix:
-$$
-\vec{T}_{A \rightarrow B} = \vec{p}_{B} - \vec{p}_{A}
 $$
