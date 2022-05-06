@@ -2,7 +2,7 @@
 
 ## Rigid Transformations
 
-<!-- ![coordinate-frames](coordinate-frames.drawio.svg) -->
+![rigid-transformations](rigid-transformations.drawio.svg)
 
 A rigid transformation of a vector, $\vec{p}$, linearly transforms $\vec{p}$ from the coordinate frame, $A$, to coordinate frame, $B$, by rotation, $R$, and translation, $T$:
 
@@ -16,12 +16,16 @@ $$
 
 ### Translation
 
+![rigid-transformations-translation](rigid-transformations-translation.drawio.svg)
+
 $T$ is the translation matrix:
 $$
 \vec{T}_{A \rightarrow B} = \vec{p}_{B|A} = \vec{p}_{B} - \vec{p}_{A}
 $$
 
 ### Rotation
+
+![rigid-transformations-rotation](rigid-transformations-rotation.drawio.svg)
 
 Let $\phi$ be the angle between the two coordinate frames:
 $$
