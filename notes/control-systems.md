@@ -94,28 +94,3 @@ $$
 $$
 
 - $\dot{c}(t)$ is the dynamics of error.
-
-## Coordinate Frames
-
-![coordinate-frames](coordinate-frames.drawio.svg)
-
-$$
-\begin{aligned}
-    \vec{p}_{B} = \vec{R}_{A \rightarrow B} \cdot \vec{p}_{A} + \vec{T}_{A \rightarrow B}
-\end{aligned}
-$$
-
-- $R$ is the rotation matrix.
-$$
-\begin{aligned}
-    \vec{R}_{A \rightarrow B} &= (\vec{b}_{A, 1}\text{ , ... , } \vec{b}_{A, n})^{T} \\
-    \vec{R}_{A \rightarrow B} &= \left(\vec{R}_{B \rightarrow A}\right)^{-1} = \left(\vec{R}_{B \rightarrow A}\right)^{T}
-\end{aligned}
-$$
-
-- $T$ is the translation matrix.
-
-In 2D:
-$$
-R_{\phi} = \left(\begin{matrix} cos(\phi) & -sin(\phi) \\ sin(\phi) & cos(\phi) \end{matrix}\right)
-$$
