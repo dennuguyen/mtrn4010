@@ -25,11 +25,12 @@ The inputs dictates the equations of $v$ and $w$ and differs between UGV types.
 The change in states over discrete time where $\tau$ is the timestep is given as:
 $$
 \frac{d\vec{x}(t + \tau)}{dt} = \frac{d}{dt}\left(\begin{matrix} x(t + \tau) \\ y(t + \tau) \\ \phi(t + \tau) \end{matrix} \right) =
+    \left(\begin{matrix} x(t) \\ y(t) \\ \phi(t) \end{matrix}\right) + \tau
     \left(
         \begin{matrix}
-            x(t) + v(t) \cdot \cos\left(\phi(t)\right) \\
-            y(t) + v(t) \cdot \sin\left(\phi(t)\right) \\
-            \phi(t) + \omega(t) \\
+            v(t) \cdot \cos\left(\phi(t)\right) \\
+            v(t) \cdot \sin\left(\phi(t)\right) \\
+            \omega(t) \\
         \end{matrix}
     \right)
 $$
