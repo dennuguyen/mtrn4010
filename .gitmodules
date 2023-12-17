@@ -1,6 +1,6 @@
 [submodule "mtrn4010-ass1"]
 	path = mtrn4010-ass1
-	url = git@gitlab.com:dennuguyen/mtrn4010-ass1.git
+	url = git@github.com:dennuguyen/mtrn4010-ass1.git
 [submodule "mtrn4010-proj"]
 	path = mtrn4010-proj
-	url = git@gitlab.com:dennuguyen/mtrn4010-proj.git
+	url = git@github.com:dennuguyen/mtrn4010-proj.git
